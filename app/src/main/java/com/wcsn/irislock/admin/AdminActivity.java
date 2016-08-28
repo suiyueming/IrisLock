@@ -1,6 +1,5 @@
 package com.wcsn.irislock.admin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,6 +35,8 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
 
     private AdminListAdapter mAdapter;
 
+    private View mShadow;
+
     public static void launch(BaseActivity activity) {
         Intent intent = new Intent(activity, AdminActivity.class);
         activity.startActivity(intent);
@@ -53,6 +54,8 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
             }
         });
 
+        mShadow = finder.find(R.id.shadow);
+
         mRecyclerView = finder.find(R.id.userList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -66,7 +69,7 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
         mAddUserView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseUserType(v, getOwnerActivity());
+                chooseUserType(v, getOwnerActivity(),mShadow);
             }
         });
 
@@ -74,9 +77,12 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
 
     }
 
-    public void chooseUserType(View view, final Activity context) {
-        View contentView = LayoutInflater.from(context).inflate(
+    public static void chooseUserType(View view, final BaseActivity context, final View shadow) {
+        final View contentView = LayoutInflater.from(context).inflate(
                 R.layout.popup_user_type, null);
+
+        shadow.setVisibility(View.VISIBLE);
+
         ViewFinder finder = new ViewFinder(contentView);
 
         TextView fixedUser = finder.find(R.id.fixedUser);
@@ -90,16 +96,18 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
         fixedUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FixedUserActivity.launch(AdminActivity.this);
+                FixedUserActivity.launch(context);
                 popupWindow.dismiss();
+                shadow.setVisibility(View.GONE);
             }
         });
 
         tmpUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TempUserActivity.launch(AdminActivity.this);
+                TempUserActivity.launch(context);
                 popupWindow.dismiss();
+                shadow.setVisibility(View.GONE);
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +115,7 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
             public void onClick(View v) {
 
                 popupWindow.dismiss();
+                shadow.setVisibility(View.GONE);
 
             }
         });
@@ -124,6 +133,7 @@ public class AdminActivity extends BaseMVPActivity<AdminPresenter>
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+                shadow.setVisibility(View.GONE);
             }
         });
     }

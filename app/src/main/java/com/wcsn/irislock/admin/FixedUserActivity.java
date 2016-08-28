@@ -1,7 +1,6 @@
 package com.wcsn.irislock.admin;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,8 +22,6 @@ import com.wcsn.irislock.R;
 import com.wcsn.irislock.admin.bean.UserInfo;
 import com.wcsn.irislock.app.App;
 import com.wcsn.irislock.login.bean.AdminInfo;
-
-import cn.qqtheme.framework.picker.OptionPicker;
 
 /**
  * Created by suiyue on 2016/8/14 0014.
@@ -58,6 +55,8 @@ public class FixedUserActivity extends BaseMVPActivity<FixedUserPresenter>
     private TextView mEnterCount;
     private CheckBox mCheckBox;
 
+    private View mShadow;
+
     public static void launch(BaseActivity activity){
         Intent intent = new Intent(activity,FixedUserActivity.class);
         activity.startActivity(intent);
@@ -76,27 +75,13 @@ public class FixedUserActivity extends BaseMVPActivity<FixedUserPresenter>
             }
         });
 
+        mShadow = finder.find(R.id.shadow);
+
         mAddUserView = finder.find(R.id.addUser);
         mAddUserView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OptionPicker picker = new OptionPicker(FixedUserActivity.this, new String[]{"永久用户", "临时用户"});
-                picker.setOffset(1);
-                picker.setSelectedIndex(1);
-                picker.setTextSize(24);
-                picker.setLineColor(Color.GRAY);
-                picker.setTitleText("添加用户");
-                picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
-                    @Override
-                    public void onOptionPicked(String option) {
-                        if (option.equals("永久用户")) {
-                            FixedUserActivity.launch(FixedUserActivity.this);
-                        } else {
-                            TempUserActivity.launch(FixedUserActivity.this);
-                        }
-                    }
-                });
-                picker.show();
+                AdminActivity.chooseUserType(v, getOwnerActivity(), mShadow);
             }
         });
 

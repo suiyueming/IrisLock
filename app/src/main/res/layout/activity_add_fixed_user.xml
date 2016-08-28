@@ -342,10 +342,18 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="right"
+
                 android:button="@drawable/checkbox_bg"/>
         </RelativeLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_shadow"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import com.ImaginationUnlimited.library.utils.log.Logger;
 import com.ImaginationUnlimited.library.utils.toast.ToastUtils;
 import com.ImaginationUnlimited.library.utils.view.ViewFinder;
 import com.wcsn.irislock.R;
+import com.wcsn.irislock.home.MainActivity;
 import com.wcsn.irislock.settings.listener.OnPatternChangedListener;
 import com.wcsn.irislock.settings.view.ImageLockView;
 
@@ -26,17 +27,27 @@ public class ImagePwdActivity extends BaseActivity implements OnPatternChangedLi
     private ImageLockView mImageLockView;
 
     private static final String IS_CHANGE_MODEL = "changeModel";
-    private boolean mChangeModel;
+
+    private int mChangeModel;
 
     public static void launch(BaseActivity activity){
-        launch(activity, false);
+        launch(activity, 0);
     }
 
-    public static void launch(BaseActivity activity, boolean changeModel){
+
+    /**
+     * 0：设置
+     * 1：更改密码
+     * 2：校对密码
+     * @param activity
+     * @param changeModel
+     */
+    public static void launch(BaseActivity activity, int changeModel){
         Intent intent = new Intent(activity,ImagePwdActivity.class);
         intent.putExtra(IS_CHANGE_MODEL, changeModel);
         activity.startActivity(intent);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +67,19 @@ public class ImagePwdActivity extends BaseActivity implements OnPatternChangedLi
                 finish();
             }
         });
+        mChangeModel = getIntent().getIntExtra(IS_CHANGE_MODEL, 0);
 
-        if (SPModel.getPwdType() == SPModel.PWD_TYPE_IMAGE) {
-            mHintText.setText(getResources().getString(R.string.inputPwdOld));
-        } else if (SPModel.getPwdType() == SPModel.PWD_TYPE_NUM) {
-            NumberPwdActivity.launch(this, true);
+        if (mChangeModel != 2) {
+            if (SPModel.getPwdType() == SPModel.PWD_TYPE_IMAGE) {
+                mHintText.setText(getResources().getString(R.string.inputPwdOld));
+            } else if (SPModel.getPwdType() == SPModel.PWD_TYPE_NUM) {
+                NumberPwdActivity.launch(this, 1);
+            }
         }
 
-        mChangeModel = getIntent().getBooleanExtra(IS_CHANGE_MODEL, false);
+
+
+
 
     }
 
@@ -71,41 +87,51 @@ public class ImagePwdActivity extends BaseActivity implements OnPatternChangedLi
     public void patternChanged(String password) {
         Logger.e(getClass().getSimpleName(), password);
 
-        if (mHintText.getText().toString()
-                .equals(getResources().getString(R.string.inputPwd))) {
-
-            SPModel.putPwd(password);
-
-            mHintText.setText(getResources().getString(R.string.inputPwdAgain));
-            mImageLockView.reset();
-
-        } else if (mHintText.getText().toString()
-                .equals(getResources().getString(R.string.inputPwdAgain))){
-
+        if (mChangeModel == 2) {
             if (password.equals(SPModel.getPwd())) {
-                SPModel.putPwdType(SPModel.PWD_TYPE_IMAGE);
-                ToastUtils.toastShort("密码设置成功");
-                finish();
+                MainActivity.launch(ImagePwdActivity.this);
             } else {
-                SPModel.putPwdType(SPModel.PWD_TYPE_NONE);
-                ToastUtils.toastShort("两次密码不一致，请重新输入");
-                mHintText.setText(getResources().getString(R.string.inputPwd));
-                mImageLockView.reset();
+                mHintText.setText("密码错误，请重新输入");
             }
-        } else {
-            if (password.equals(SPModel.getPwd()) && !mChangeModel) {
-                mHintText.setText(getResources().getString(R.string.inputPwd));
-                mImageLockView.reset();
-            } else if (password.equals(SPModel.getPwd()) && mChangeModel) {
-                SPModel.putPwdType(SPModel.PWD_TYPE_NONE);
-//                NumberPwdActivity.launch(getOwnerActivity());
-                finish();
 
-            }else {
-                ToastUtils.toastShort("密码错误，请重新输入");
+        } else {
+            if (mHintText.getText().toString()
+                    .equals(getResources().getString(R.string.inputPwd))) {
+
+                SPModel.putPwd(password);
+
+                mHintText.setText(getResources().getString(R.string.inputPwdAgain));
                 mImageLockView.reset();
+
+            } else if (mHintText.getText().toString()
+                    .equals(getResources().getString(R.string.inputPwdAgain))){
+
+                if (password.equals(SPModel.getPwd())) {
+                    SPModel.putPwdType(SPModel.PWD_TYPE_IMAGE);
+                    ToastUtils.toastShort("密码设置成功");
+                    finish();
+                } else {
+                    SPModel.putPwdType(SPModel.PWD_TYPE_NONE);
+                    ToastUtils.toastShort("两次密码不一致，请重新输入");
+                    mHintText.setText(getResources().getString(R.string.inputPwd));
+                    mImageLockView.reset();
+                }
+            } else {
+                if (password.equals(SPModel.getPwd()) && mChangeModel==0) {
+                    mHintText.setText(getResources().getString(R.string.inputPwd));
+                    mImageLockView.reset();
+                } else if (password.equals(SPModel.getPwd()) && mChangeModel==1) {
+                    SPModel.putPwdType(SPModel.PWD_TYPE_NONE);
+                    finish();
+
+                }else {
+                    ToastUtils.toastShort("密码错误，请重新输入");
+                    mImageLockView.reset();
+                }
             }
         }
+
+
     }
 
     @Override

@@ -20,6 +20,8 @@ import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.wcsn.irislock.R;
 import com.wcsn.irislock.home.MainActivity;
 import com.wcsn.irislock.login.AdminOrVisitorActivity;
+import com.wcsn.irislock.settings.ImagePwdActivity;
+import com.wcsn.irislock.settings.NumberPwdActivity;
 import com.wcsn.irislock.utils.SocketUtils;
 import com.wcsn.irislock.utils.image.ImageLoaderFactory;
 
@@ -66,18 +68,22 @@ public class LaunchActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
-
-
         mSubscription = Observable.timer(STANDING_TIME, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
-                        if (!SPModel.getAdmin()) {
+                        if (SPModel.getAdmin()) {
+                            AdminOrVisitorActivity.launch(LaunchActivity.this);
+                        } else if (StringUtils.isNullOrEmpty(SPModel.getPwd())){
                             MainActivity.launch(LaunchActivity.this);
                         } else {
-                            AdminOrVisitorActivity.launch(LaunchActivity.this);
+                            if (SPModel.getPwdType() == SPModel.PWD_TYPE_IMAGE) {
+                                ImagePwdActivity.launch(LaunchActivity.this, 2);
+                            } else {
+                                NumberPwdActivity.launch(LaunchActivity.this, 2);
+                            }
                         }
 
                     }

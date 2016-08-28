@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <LinearLayout
+        android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
         android:background="@color/colorIngigo"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/adminBack"
             android:layout_width="wrap_content"
@@ -35,10 +37,18 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/userList"
+        android:layout_below="@+id/titleLayout"
         android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_shadow"
+        android:visibility="gone"/>
+
+</RelativeLayout>

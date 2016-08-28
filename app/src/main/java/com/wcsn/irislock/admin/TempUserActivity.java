@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -66,13 +67,17 @@ public class TempUserActivity extends BaseMVPActivity<TempUserPresenter> impleme
 
     private UserInfo mUserInfo = new UserInfo();
 
-
-
     private int[] week = new int[7];
 
     private TempUserInfo mTempUserInfo = new TempUserInfo();
 
     private String sex = "male";
+
+    private ImageView mBackView;
+    private ImageView mAddUserView;
+
+    private View mShadow;
+
 
     public static void launch(BaseActivity activity) {
         Intent intent = new Intent(activity, TempUserActivity.class);
@@ -84,6 +89,26 @@ public class TempUserActivity extends BaseMVPActivity<TempUserPresenter> impleme
 
         setContentView(R.layout.activity_add_temp_user);
         ViewFinder finder = new ViewFinder(this);
+
+        mBackView = finder.find(R.id.back);
+        mBackView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mShadow = finder.find(R.id.shadow);
+
+        mAddUserView = finder.find(R.id.addUser);
+        mAddUserView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminActivity.chooseUserType(v, getOwnerActivity(), mShadow);
+            }
+        });
+
+
         mNameEdit = finder.find(R.id.nameEdit);
         mNameCheck = finder.find(R.id.nameCheck);
         mPhoneEdit = finder.find(R.id.phoneEdit);

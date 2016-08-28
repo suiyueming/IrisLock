@@ -424,4 +424,11 @@
 
     </ScrollView>
 
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_shadow"
+        android:visibility="gone"/>
+
 </RelativeLayout>

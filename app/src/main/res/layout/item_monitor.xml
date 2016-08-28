@@ -55,7 +55,8 @@
                 android:textColor="@color/colorIngigo"
                 android:text="@string/app_name"
                 android:layout_centerVertical="true"
-                android:layout_alignRight="@+id/pictureDate"/>
+                android:layout_alignRight="@+id/pictureDate"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/pictureType"
                 android:layout_width="wrap_content"

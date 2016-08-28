@@ -244,7 +244,7 @@ public class SettingsActivity extends BaseMVPActivity<SettingsPresenter> impleme
             @Override
             public void onClick(View v) {
                 mShadow.setVisibility(View.GONE);
-                NumberPwdActivity.launch(getOwnerActivity());
+                NumberPwdActivity.launch(getOwnerActivity(),0);
                 popupWindow.dismiss();
             }
         });
@@ -253,7 +253,7 @@ public class SettingsActivity extends BaseMVPActivity<SettingsPresenter> impleme
             @Override
             public void onClick(View v) {
                 mShadow.setVisibility(View.GONE);
-                ImagePwdActivity.launch(getOwnerActivity());
+                ImagePwdActivity.launch(getOwnerActivity(),0);
                 popupWindow.dismiss();
             }
         });
